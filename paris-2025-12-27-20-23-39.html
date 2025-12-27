@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>פריז: עיר האורות</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        :root {
+            --primary-color: #003366; /* כחול פריזאי כהה */
+            --secondary-color: #E7E7E7;
+            --accent-color: #D4AF37; /* זהב */
+            --text-color: #333;
+            --bg-color: #FFFFFF;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--bg-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            font-size: 2.8em;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--accent-color);
+            padding-bottom: 5px;
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+
+        .section-content {
+            padding: 10px 0;
+        }
+
+        .attraction-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .attraction-item {
+            background: #f9f9f9;
+            border-right: 5px solid var(--primary-color);
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 4px;
+        }
+
+        .attraction-item strong {
+            display: block;
+            font-size: 1.2em;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        /* Gallery Styling */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .gallery img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Map Styling */
+        #mapid {
+            height: 400px;
+            width: 100%;
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+            color: white;
+            background-color: var(--primary-color);
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>פריז: עיר האורות</h1>
+        <p>מדריך מקיף ליעד התרבותי והרומנטי ביותר באירופה</p>
+    </header>
+
+    <div class="container">
+
+        <section id="introduction">
+            <h2>מבוא</h2>
+            <div class="section-content">
+                <p>פריז, בירת צרפת, ידועה ברחבי העולם כ"עיר האורות" (La Ville Lumière) ומוקד מרכזי של תרבות, אופנה ואמנות. היא שוכנת על גדות נהר הסן ומציעה שילוב מרהיב של ארכיטקטורה היסטורית מפוארת, שדרות רחבות וגנים מטופחים וירוקים.</p>
+                <p>העיר מושכת מיליוני תיירים מדי שנה בזכות האווירה הרומנטית הבלתי מתפשרת והמוסדות האיקוניים שלה. בין אם אתם מחפשים קולינריה עילית, גלריות מפורסמות או פשוט לטייל לאורך הנהר, פריז מבטיחה חוויה עשירה ובלתי נשכחת לכל מבקר.</p>
+            </div>
+        </section>
+
+        <section id="attractions">
+            <h2>אטרקציות מרכזיות</h2>
+            <ul class="attraction-list">
+                <li class="attraction-item" data-lat="48.8584" data-lng="2.2945" data-name="מגדל אייפל">
+                    <strong>מגדל אייפל (Tour Eiffel)</strong>
+                    <p>הסמל הבלתי מעורער של פריז ונקודת תצפית מדהימה על העיר. המגדל נבנה עבור התערוכה העולמית של 1889 ונותר פלא הנדסי ואדריכלי.</p>
+                </li>
+                <li class="attraction-item" data-lat="48.8606" data-lng="2.3376" data-name="מוזיאון הלובר">
+                    <strong>מוזיאון הלובר (Musée du Louvre)</strong>
+                    <p>המוזיאון הגדול והמפורסם בעולם, השוכן בארמון מלכותי לשעבר. הלובר הוא הבית של יצירות מופת כמו "המונה ליזה" ו"ונוס ממילו".</p>
+                </li>
+                <li class="attraction-item" data-lat="48.8529" data-lng="2.3499" data-name="קתדרלת נוטרדאם">
+                    <strong>קתדרלת נוטרדאם (Notre Dame de Paris)</strong>
+                    <p>יצירת מופת עוצרת נשימה של אדריכלות גותית, הממוקמת על איל דה לה סיטה (Île de la Cité) במרכז הסן. הקתדרלה נמצאת בתהליך שיקום לאחר השריפה הגדולה.</p>
+                </li>
+                <li class="attraction-item" data-lat="48.8738" data-lng="2.2950" data-name="שער הניצחון">
+                    <strong>שער הניצחון (Arc de Triomphe)</strong>
+                    <p>אנדרטה מונומנטלית לכבוד הנופלים במלחמות צרפת. השער ממוקם בכיכר שארל דה גול (Étoile) ומציע תצפית נהדרת על השאנז אליזה.</p>
+                </li>
+                <li class="attraction-item" data-lat="48.8867" data-lng="2.3431" data-name="בזיליקת סקרה-קר">
+                    <strong>בזיליקת סקרה-קר (Sacré-Cœur Basilica)</strong>
+                    <p>כנסייה לבנה מרהיבה הממוקמת בראש גבעת מונמארטר. הבזיליקה מציעה נוף פנורמי של פריז והיא מוקפת באווירה אמנותית ובוהמית.</p>
+                </li>
+                <li class="attraction-item" data-lat="48.8698" data-lng="2.3072" data-name="גני טווילרי">
+                    <strong>גני טווילרי (Jardin des Tuileries)</strong>
+                    <p>הגן הציבורי המפורסם המחבר בין הלובר לכיכר הקונקורד. מקום מושלם למנוחה, טיול רגוע בין פסלים או הנאה מבריכות הנוי.</p>
+                </li>
+            </ul>
+        </section>
+
+        <section id="visuals">
+            <h2>גלריית תמונות</h2>
+            <div class="gallery">
+                <img src="https://pollinations.ai/p/paris_eiffel_tower?width=800&height=600&seed=123" alt="מגדל אייפל בפריז">
+                <img src="https://pollinations.ai/p/paris_louvre_museum?width=800&height=600&seed=123" alt="מוזיאון הלובר והפירמידה">
+                <img src="https://pollinations.ai/p/paris_notre_dame_cathedral?width=800&height=600&seed=123" alt="קתדרלת נוטרדאם">
+            </div>
+        </section>
+
+        <section id="map">
+            <h2>מפת האטרקציות</h2>
+            <div id="mapid"></div>
+        </section>
+        
+    </div>
+
+    <footer>
+        <p>&copy; 2024 מדריך פריז - תרבות עולמית</p>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Leaflet Map Initialization
+        const parisCoords = [48.8566, 2.3522]; // Paris Center
+        const map = L.map('mapid').setView(parisCoords, 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Define attractions data based on the list items
+        const attractions = [
+            { lat: 48.8584, lng: 2.2945, name: "מגדל אייפל" },
+            { lat: 48.8606, lng: 2.3376, name: "מוזיאון הלובר" },
+            { lat: 48.8529, lng: 2.3499, name: "קתדרלת נוטרדאם" },
+            { lat: 48.8738, lng: 2.2950, name: "שער הניצחון" },
+            { lat: 48.8867, lng: 2.3431, name: "בזיליקת סקרה-קר" },
+            { lat: 48.8698, lng: 2.3072, name: "גני טווילרי" }
+        ];
+
+        // Add markers for each attraction
+        attractions.forEach(attr => {
+            L.marker([attr.lat, attr.lng])
+                .addTo(map)
+                .bindPopup(`<b>${attr.name}</b>`)
+                .openPopup();
+        });
+
+    </script>
+</body>
+</html>
+<!-- End of raw HTML output -->
