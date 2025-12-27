@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>פריז: עיר האורות</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #f1c40f;
+            --background-color: #ecf0f1;
+            --text-color: #34495e;
+            --accent-color: #e74c3c;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            direction: rtl;
+            text-align: right;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            letter-spacing: 1px;
+        }
+
+        section {
+            padding: 30px 0;
+            border-bottom: 1px solid #bdc3c7;
+        }
+
+        h2 {
+            color: var(--accent-color);
+            font-size: 2em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Introduction Styling */
+        .introduction p {
+            font-size: 1.1em;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: justify;
+        }
+
+        /* Attractions Grid */
+        .attractions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .attraction-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .attraction-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .attraction-card h3 {
+            color: var(--primary-color);
+            margin-top: 0;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 5px;
+        }
+
+        /* Visuals */
+        .visuals-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .visuals-grid img {
+            width: 100%;
+            max-width: 380px;
+            height: auto;
+            border-radius: 8px;
+            object-fit: cover;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Map */
+        #map {
+            height: 400px;
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px 0;
+            background-color: var(--primary-color);
+            color: white;
+            margin-top: 40px;
+            font-size: 0.9em;
+        }
+        
+        /* Mobile adjustments */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2em;
+            }
+            .container {
+                padding: 10px;
+                width: 95%;
+            }
+            .visuals-grid img {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>פריז: עיר האורות</h1>
+    </header>
+
+    <div class="container">
+
+        <section class="introduction">
+            <h2>מבוא</h2>
+            <p>
+                פריז, המכונה "עיר האורות", היא בירת צרפת ואחד היעדים התיירותיים הפופולריים בעולם כולו. העיר ידועה בזכות האמנות, האופנה, הגסטרונומיה המעולה והתרבות העשירה שלה. פריז משלבת בצורה ייחודית ארכיטקטורה היסטורית מפוארת, גנים מטופחים, עם אנרגיה אורבנית מודרנית ואווירה רומנטית שאי אפשר למצוא בשום מקום אחר. נהר הסן חוצה אותה ומעניק לה מראה ציורי.
+            </p>
+        </section>
+
+        <section class="attractions">
+            <h2>אטרקציות מובילות</h2>
+            <div class="attractions-grid">
+
+                <div class="attraction-card">
+                    <h3>מגדל אייפל (Tour Eiffel)</h3>
+                    <p>הסמל האייקוני והמפורסם ביותר של פריז. המגדל נבנה עבור התערוכה העולמית של 1889 ומציע נקודת תצפית מדהימה בגובה של 324 מטר על כל העיר.</p>
+                </div>
+
+                <div class="attraction-card">
+                    <h3>מוזיאון הלובר (Musée du Louvre)</h3>
+                    <p>אחד המוזיאונים הגדולים והחשובים בעולם, השוכן בארמון מלכותי לשעבר. ביתם של יצירות מופת בינלאומיות, כולל המונה ליזה והוונוס של מילו.</p>
+                </div>
+
+                <div class="attraction-card">
+                    <h3>קתדרלת נוטרדאם (Notre Dame)</h3>
+                    <p>יצירת מופת של אדריכלות גותית, הממוקמת על אי הסיטה (Île de la Cité) בלב נהר הסן. אף על פי שהיא עדיין בשיקום לאחר השריפה, חזותה נותרה מרשימה ביותר.</p>
+                </div>
+
+                <div class="attraction-card">
+                    <h3>שדרות שאנז אליזה (Champs-Élysées)</h3>
+                    <p>השדרה המפורסמת ביותר בעולם. היא משתרעת משער הניצחון ועד כיכר הקונקורד, ועמוסה בחנויות יוקרה, בתי קפה יוקרתיים ותיאטראות היסטוריים.</p>
+                </div>
+
+                <div class="attraction-card">
+                    <h3>שער הניצחון (Arc de Triomphe)</h3>
+                    <p>אתר הנצחה איקוני הניצב במרכז כיכר שארל דה גול. הוא נבנה לכבוד הלוחמים הצרפתיים במלחמות נפוליאון ומציע תצפית מעולה על השאנז אליזה.</p>
+                </div>
+
+                <div class="attraction-card">
+                    <h3>סאקרה-קר (Sacré-Cœur)</h3>
+                    <p>בזיליקה רומנסקית-ביזנטית יפהפייה עשויה אבן לבנה. היא ממוקמת על גבעת מונמארטר ומספקת נוף פנורמי מרהיב על פריז כולה.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="visuals">
+            <h2>מראות מפריז</h2>
+            <div class="visuals-grid">
+                <img src="https://pollinations.ai/p/paris_Eiffel%20Tower?width=800&height=600&seed=123" alt="מגדל אייפל בשקיעה">
+                <img src="https://pollinations.ai/p/paris_Louvre%20Museum?width=800&height=600&seed=123" alt="פירמידת הלובר">
+                <img src="https://pollinations.ai/p/paris_Notre%20Dame%20Cathedral?width=800&height=600&seed=123" alt="קתדרלת נוטרדאם">
+            </div>
+        </section>
+
+        <section class="map-section">
+            <h2>מפת האטרקציות</h2>
+            <div id="map"></div>
+        </section>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2024 עיר האורות - פריז. כל הזכויות שמורות.</p>
+    </footer>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script>
+        // Initialize Map
+        const parisCenter = [48.8566, 2.3522];
+        const map = L.map('map').setView(parisCenter, 13);
+
+        // Add Tile Layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Attraction Data (Hebrew)
+        const attractions = [
+            { name: "מגדל אייפל", coords: [48.8584, 2.2945], desc: "הסמל המפורסם של פריז." },
+            { name: "מוזיאון הלובר", coords: [48.8606, 2.3376], desc: "ביתם של המונה ליזה." },
+            { name: "קתדרלת נוטרדאם", coords: [48.8530, 2.3499], desc: "יצירת מופת גותית." },
+            { name: "שער הניצחון", coords: [48.8738, 2.2950], desc: "נצחון הלוחמים הצרפתיים." },
+            { name: "סאקרה-קר", coords: [48.8867, 2.3431], desc: "בזיליקה על גבעת מונמארטר." },
+            { name: "שדרות שאנז אליזה", coords: [48.8698, 2.3072], desc: "השדרה המפורסמת ביותר." }
+        ];
+
+        // Add Markers
+        attractions.forEach(attraction => {
+            L.marker(attraction.coords)
+                .addTo(map)
+                .bindPopup(`<b>${attraction.name}</b><br>${attraction.desc}`)
+                .openPopup();
+        });
+
+    </script>
+</body>
+</html>
+```
