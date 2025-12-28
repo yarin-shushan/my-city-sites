@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>פריז - עיר האורות</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700&display=swap');
+
+        body {
+            font-family: 'Heebo', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+            color: #333;
+            line-height: 1.6;
+            direction: rtl;
+            text-align: right;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: #002244;
+            color: #fff;
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom: 5px solid #E3B505;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 700;
+        }
+
+        section {
+            padding: 20px 0;
+            margin-bottom: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        h2 {
+            font-size: 1.8em;
+            color: #002244;
+            border-bottom: 2px solid #E3B505;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            text-align: right;
+            padding-right: 15px;
+        }
+
+        .content-box p, .attraction-item {
+            padding: 0 15px;
+        }
+
+        .attractions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 0 15px;
+        }
+
+        .attraction-item {
+            background: #fdfdfd;
+            border: 1px solid #eee;
+            padding: 15px;
+            border-radius: 6px;
+            transition: transform 0.3s;
+        }
+
+        .attraction-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .attraction-item h3 {
+            color: #E3B505;
+            margin-top: 0;
+            font-size: 1.3em;
+        }
+
+        .image-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .image-gallery img {
+            width: 100%;
+            max-width: 350px;
+            height: auto;
+            border-radius: 6px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            object-fit: cover;
+        }
+
+        /* Map Styling */
+        #parisMap {
+            height: 400px;
+            width: 100%;
+            border-radius: 6px;
+            margin-top: 20px;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2em;
+            }
+            .image-gallery {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>פריז - עיר האורות</h1>
+    </header>
+
+    <div class="container">
+
+        <section id="introduction" class="content-box">
+            <h2>מבוא</h2>
+            <p>פריז, המכונה "עיר האורות", היא בירת צרפת ואחד היעדים התיירותיים הפופולריים בעולם. העיר משלבת היסטוריה עשירה, אמנות מפורסמת, וארכיטקטורה מרהיבה. היא נחשבת למרכז גלובלי לאופנה, גסטרונומיה ותרבות, ומציעה חוויה רומנטית ובלתי נשכחת לכל מבקר. פריז מציגה איזון מושלם בין מונומנטים היסטוריים לחיים עירוניים תוססים.</p>
+        </section>
+
+        <section id="attractions">
+            <h2>אטרקציות מרכזיות</h2>
+            <div class="attractions-grid">
+
+                <div class="attraction-item">
+                    <h3>1. מגדל אייפל (Tour Eiffel)</h3>
+                    <p>סמלה המובהק של פריז ומופת להנדסה. מציע נופים פנורמיים מדהימים של העיר, ומהווה אתר חובה לכל תייר המגיע לביקור בבירה הצרפתית.</p>
+                </div>
+
+                <div class="attraction-item">
+                    <h3>2. מוזיאון הלובר (Musée du Louvre)</h3>
+                    <p>אחד המוזיאונים הגדולים והחשובים בעולם, ביתם של יצירות מופת כמו המונה ליזה, הפירמידה מזכוכית בכניסה היא אייקון בפני עצמו.</p>
+                </div>
+
+                <div class="attraction-item">
+                    <h3>3. קתדרלת נוטרדאם (Notre-Dame)</h3>
+                    <p>קתדרלה גותית עוצרת נשימה, השוכנת על האי איל דה לה סיטה. היא נמצאת בשיקום לאחר השריפה, ועדיין מהווה אתר היסטורי ודתי מרכזי.</p>
+                </div>
+
+                <div class="attraction-item">
+                    <h3>4. שער הניצחון (Arc de Triomphe)</h3>
+                    <p>מונומנט ענק הניצב במרכז כיכר שארל דה גול, המנציח את הניצחונות הצרפתיים הגדולים ומציע תצפית מעולה על שאנז אליזה.</p>
+                </div>
+
+                <div class="attraction-item">
+                    <h3>5. שדרות שאנז אליזה (Champs-Élysées)</h3>
+                    <p>השדרה המפורסמת ביותר בעולם, הידועה בחנויות היוקרה, בתי הקפה האלגנטיים והתיאטראות שלה, ומהווה מרכז קניות ובילויים.</p>
+                </div>
+
+                <div class="attraction-item">
+                    <h3>6. גני לוקסמבורג (Jardin du Luxembourg)</h3>
+                    <p>גנים ציבוריים יפהפיים הממוקמים ברובע השישי. מקום אידיאלי למנוחה, שיט בסירות קטנות באגם המרכזי ובילוי רגוע.</p>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="visuals">
+            <h2>גלריית תמונות</h2>
+            <div class="image-gallery">
+                <img src="https://pollinations.ai/p/paris_Eiffel_Tower?width=800&height=600&seed=123" alt="מגדל אייפל המפורסם">
+                <img src="https://pollinations.ai/p/paris_Louvre_Museum?width=800&height=600&seed=123" alt="מוזיאון הלובר">
+                <img src="https://pollinations.ai/p/paris_Notre_Dame?width=800&height=600&seed=123" alt="קתדרלת נוטרדאם">
+            </div>
+        </section>
+
+        <section id="map-section">
+            <h2>מפת האטרקציות</h2>
+            <div id="parisMap"></div>
+        </section>
+
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        // Set the center coordinates for Paris
+        const centerCoords = [48.8566, 2.3522];
+        const initialZoom = 13;
+
+        // Initialize the map
+        const map = L.map('parisMap').setView(centerCoords, initialZoom);
+
+        // Add the Tile Layer (OpenStreetMap)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+        // Attraction Data [Latitude, Longitude, Name (Hebrew), Description (Hebrew)]
+        const attractions = [
+            [48.8584, 2.2945, "מגדל אייפל", "סמל פריז האייקוני."],
+            [48.8606, 2.3376, "מוזיאון הלובר", "ביתה של המונה ליזה."],
+            [48.8529, 2.3499, "קתדרלת נוטרדאם", "הקתדרלה הגותית ההיסטורית."],
+            [48.8738, 2.2950, "שער הניצחון", "מונומנט המנציח ניצחונות צרפתיים."],
+            [48.8698, 2.3072, "שאנז אליזה", "השדרה המפורסמת ביותר בעולם."],
+            [48.8462, 2.3370, "גני לוקסמבורג", "פארק יפהפה ורגוע."]
+        ];
+
+        // Add markers for each attraction
+        attractions.forEach(attraction => {
+            const [lat, lon, name, description] = attraction;
+            L.marker([lat, lon]).addTo(map)
+                .bindPopup(`<b>${name}</b><br>${description}`)
+                .openPopup();
+        });
+
+    </script>
+
+</body>
+</html>
+<!-- End of HTML Page for Paris -->
