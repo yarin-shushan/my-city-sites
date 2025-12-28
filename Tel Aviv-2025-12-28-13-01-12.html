@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>תל אביב-יפו: העיר הלבנה והתוססת</title>
+    <!-- Leaflet CSS without integrity/crossorigin -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;500;700&display=swap');
+        
+        body {
+            font-family: 'Heebo', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+            text-align: right;
+        }
+
+        header {
+            background-color: #007bff;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        h2 {
+            color: #007bff;
+            border-bottom: 3px solid #007bff;
+            padding-bottom: 5px;
+            margin-top: 30px;
+            font-weight: 700;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        .attraction-list {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .attraction-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .attraction-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .attraction-item h3 {
+            color: #28a745;
+            margin-top: 0;
+            font-weight: 500;
+        }
+
+        .visuals {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .visuals img {
+            width: 100%;
+            max-width: 380px;
+            height: auto;
+            border-radius: 8px;
+            object-fit: cover;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        #map {
+            height: 400px;
+            width: 100%;
+            border-radius: 8px;
+            margin-top: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>תל אביב-יפו: העיר ללא הפסקה</h1>
+    </header>
+
+    <div class="container">
+
+        <h2>מבוא</h2>
+        <p>
+            תל אביב-יפו, המכונה "העיר ללא הפסקה", היא המרכז הכלכלי, התרבותי והטכנולוגי של ישראל. זוהי עיר תוססת המשלבת היסטוריה עתיקה (יפו העתיקה) עם מודרניות ארכיטקטונית מרהיבה (מרכז העיר הלבנה, אתר מורשת עולמי של אונסק"ו). תל אביב ידועה בחיי הלילה הפעילים שלה, בחופיה הזהובים שלאור הים התיכון ובסצנת הקולינריה המגוונת והמצליחה.
+        </p>
+
+        <h2>אטרקציות מרכזיות</h2>
+        <ul class="attraction-list">
+            <li class="attraction-item">
+                <h3>נמל יפו</h3>
+                <p>אחד מנמלי הים העתיקים בעולם, בעל היסטוריה של אלפי שנים. כיום, הנמל הוא מרכז בילוי שוקק המציע גלריות אמנות, מסעדות דגים ונוף מרהיב לקו הרקיע המודרני של תל אביב.</p>
+            </li>
+            <li class="attraction-item">
+                <h3>שדרות רוטשילד</h3>
+                <p>השדרה המרכזית והיוקרתית של העיר, מוקד לארכיטקטורת הבאוהאוס המפורסמת. לאורך השדרה נמצאים בתי קפה טרנדיים, מרכזי תרבות והיא מהווה את ליבת העסקים והפנאי של העיר.</p>
+            </li>
+            <li class="attraction-item">
+                <h3>מוזיאון תל אביב לאמנות</h3>
+                <p>אחד ממוסדות האמנות החשובים בישראל. המוזיאון מציג אוספים נרחבים של אמנות ישראלית ובינלאומית, תוך דגש על יצירות מודרניות ועכשווית בבניין מרשים וחדשני.</p>
+            </li>
+            <li class="attraction-item">
+                <h3>פארק הירקון</h3>
+                <p>הריאה הירוקה הגדולה של תל אביב. פארק עצום המשתרע לאורך נהר הירקון ומציע מגוון פעילויות הכוללות מסלולי ריצה ואופניים, אגם שיט, גני סלעים ומתקני ספורט לכל המשפחה.</p>
+            </li>
+            <li class="attraction-item">
+                <h3>שוק הכרמל</h3>
+                <p>השוק הגדול והססגוני ביותר בעיר. כאן ניתן למצוא תוצרת טרייה, תבלינים אקזוטיים, בגדים במחירים נוחים וכן מגוון רחב של דוכני אוכל רחוב טרנדיים שהפכו למטרה קולינרית.</p>
+            </li>
+            <li class="attraction-item">
+                <h3>חוף הים</h3>
+                <p>רצועת חוף ארוכה ומטופחת המשתרעת לכל אורך העיר, ממרינה ועד יפו. זהו המקום המושלם לרחצה, גלישה, משחקי מטקות ובעיקר, לצפייה בשקיעות הדרמטיות מעל הים התיכון.</p>
+            </li>
+        </ul>
+
+        <h2>גלריה ויזואלית</h2>
+        <div class="visuals">
+            <img src="https://pollinations.ai/p/Tel_Aviv_Jaffa_Port?width=800&height=600&seed=123" alt="נמל יפו בשעת שקיעה">
+            <img src="https://pollinations.ai/p/Tel_Aviv_Rothschild_Boulevard?width=800&height=600&seed=123" alt="שדרות רוטשילד והאדריכלות הלבנה">
+            <img src="https://pollinations.ai/p/Tel_Aviv_Tel_Aviv_Museum_of_Art?width=800&height=600&seed=123" alt="מוזיאון תל אביב לאמנות">
+        </div>
+
+        <h2>מפת האטרקציות</h2>
+        <div id="map"></div>
+
+    </div>
+
+    <!-- Leaflet JS without integrity/crossorigin -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script>
+        // Initialize Map
+        const map = L.map('map').setView([32.0853, 34.7818], 13); // Center of Tel Aviv
+
+        // Add Tile Layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Attraction Data
+        const attractions = [
+            { name: "נמל יפו", lat: 32.0567, lon: 34.7508, popup: "נמל עתיק המשמש כיום מרכז בילוי" },
+            { name: "שדרות רוטשילד", lat: 32.0664, lon: 34.7749, popup: "הלב הכלכלי והתרבותי, מוקד באוהאוס" },
+            { name: "מוזיאון תל אביב לאמנות", lat: 32.0784, lon: 34.7869, popup: "אוסף אמנות מודרנית ועכשווית" },
+            { name: "פארק הירקון", lat: 32.1050, lon: 34.8000, popup: "הריאה הירוקה של העיר" },
+            { name: "שוק הכרמל", lat: 32.0682, lon: 34.7661, popup: "השוק הססגוני והמרכזי של תל אביב" },
+            { name: "חוף הים", lat: 32.0740, lon: 34.7630, popup: "רצועת חוף מושלמת לרחצה וגלישה" }
+        ];
+
+        // Add Markers
+        attractions.forEach(attraction => {
+            L.marker([attraction.lat, attraction.lon])
+                .addTo(map)
+                .bindPopup(`<b>${attraction.name}</b><br>${attraction.popup}`)
+                .openPopup();
+        });
+    </script>
+
+</body>
+</html>
