@@ -1,0 +1,451 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "authentication": "airtableTokenApi",
+        "baseId": {
+          "__rl": true,
+          "value": "appnqpDQIDEbJJwk3",
+          "mode": "id"
+        },
+        "tableId": {
+          "__rl": true,
+          "value": "tbl8c5JNxFVrMTmOJ",
+          "mode": "id"
+        },
+        "triggerField": "Location",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.airtableTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "af5ce8de-56c0-4dd9-9e1e-416b86952922",
+      "name": "Airtable Trigger",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "Np019ByOJWosB25w",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-flash-latest",
+          "mode": "list",
+          "cachedResultName": "models/gemini-flash-latest"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Task: Create or update a standalone, professional HTML page about the city of: {{ $node[\"Airtable Trigger\"].json[\"fields\"][\"Location\"] }}.\n\nCore Content Requirements (All visible text must be in HEBREW):\n\nIntroduction: A concise description of the city (3-4 sentences).\n\nTop Attractions: List up to 6 attractions with a name and a brief description for each.\n\nVisuals (CRITICAL - IMAGE LOGIC):\nInclude 3 high-quality images. You MUST use the following URL structure for each:\n\"https://image.pollinations.ai/prompt/{{ $node[\"Airtable Trigger\"].json[\"fields\"][\"Location\"] }}%20landmark?seed=1\"\n(For the other two images, vary the seed to 2 and 3).\n\nInteractive Map (Leaflet.js):\nLoad Leaflet CSS/JS via:\nCSS: https://unpkg.com/leaflet@1.9.4/dist/leaflet.css\nJS: https://unpkg.com/leaflet@1.9.4/dist/leaflet.js\nIMPORTANT: Do NOT include \"integrity\" or \"crossorigin\" attributes.\nCenter the map on the city and add markers for the attractions with popups.\n\nTechnical Specs:\nContainer: The map div must have height: 400px;.\nStyling: Use modern, mobile-friendly CSS within <style> tags.\nOutput: Return ONLY raw HTML code. Do NOT use markdown code blocks (no ```html).\nJS Placement: Initialize the map in a <script> tag just before the closing </body>.\n\n**IMPORTANT - REVISION INSTRUCTIONS:**\nIf feedback is provided, modify the page accordingly.\nUser Feedback: {{ $('Wait').isExecuted ? $('Wait').item.json[\"Enter what is missing in the original prompt\"] : 'No feedback yet. This is the first version.' }}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "8623aa3b-532e-4bc0-85b9-7be61b43571b",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "zcEE2YoxlXTzP0EV",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// קבלת תוכן ה-HTML מה-Node הקודם\nconst htmlContent = $input.first().json.content.parts[0].text;\n\n// יצירת Buffer מהטקסט (קידוד UTF-8 תומך בעברית)\nconst binaryData = Buffer.from(htmlContent, 'utf-8');\n\n// החזרת האובייקט בפורמט ש-n8n מבין כקובץ\nreturn {\n  json: {\n    fileName: \"city_guide.html\"\n  },\n  binary: {\n    data: {\n      data: binaryData.toString('base64'),\n      mimeType: \"text/html\",\n      fileName: \"city_guide.html\",\n      fileExtension: \"html\"\n    }\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        560,
+        0
+      ],
+      "id": "e5b4c75f-90d4-4f65-ad38-1873020afb01",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "sendTo": "=yarinshu@gmail.com",
+        "subject": "AI Travel HTML Generator",
+        "message": "=<!DOCTYPE html>\n<html dir=\"rtl\" lang=\"he\">\n<head>\n    <meta charset=\"UTF-8\">\n    <style>\n        /* הגדרות כלליות למניעת בעיות תצוגה */\n        body {\n            font-family: Arial, sans-serif;\n            line-height: 1.6;\n            color: #333;\n            margin: 0;\n            padding: 0;\n            direction: rtl; /* כיוון מימין לשמאל */\n            text-align: right; /* יישור טקסט לימין */\n        }\n        .container {\n            border: 1px solid #ddd;\n            padding: 20px;\n            border-radius: 10px;\n            max-width: 600px;\n            margin: 20px auto;\n            background-color: #ffffff;\n        }\n        .button {\n            background-color: #67b05d; /* צבע הירוק מהתמונה שלך */\n            color: white !important;\n            padding: 15px 35px;\n            text-align: center;\n            text-decoration: none;\n            display: inline-block;\n            font-size: 18px;\n            margin: 20px 0;\n            border-radius: 8px;\n            font-weight: bold;\n        }\n        .list-item {\n            margin-bottom: 8px;\n        }\n    </style>\n</head>\n<body>\n    <div class=\"container\">\n        <h1 style=\"color: #2c3e50;\">האתר שיצרנו עבורך מוכן! 🎉</h1>\n        <p>שלום,</p>\n        <p>הבינה המלאכותית סיימה לעצב ולכתוב את דף המידע על העיר <strong>{{ $('Airtable Trigger').item.json.fields.Location }}</strong>.</p>\n        <p>עכשיו הגיע התור שלך – אנחנו רוצים לוודא שהתוצאה מושלמת עבורך. האם הכל נראה כשורה? האם המפה והאטרקציות מדויקות?</p>\n        \n        <div style=\"text-align: center;\">\n            <a href=\"{{$execution.resumeFormUrl}}\" class=\"button\">צפייה באתר ואישור סופי</a>\n        </div>\n\n        <h3>מה מחכה לך בלינק?</h3>\n        <ul style=\"padding-right: 20px;\">\n            <li class=\"list-item\">תצוגה מקדימה של דף ה-HTML שנוצר.</li>\n            <li class=\"list-item\">אפשרות לאשר את האתר למשלוח.</li>\n            <li class=\"list-item\">אפשרות להכניס הערות לתיקון במידה ומשהו לא נראה לך.</li>\n        </ul>\n        \n        <p>בברכה,<br>\n        <strong>מערכת האוטומציה שלך</strong></p>\n    </div>\n</body>\n</html>",
+        "options": {
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {}
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        768,
+        0
+      ],
+      "id": "fb9e72d3-4e74-47e1-9443-7dc4bd54601c",
+      "name": "Send a message",
+      "webhookId": "78f999c9-bb66-4a6b-bb8b-77ac222cdff3",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Gm6ORSRNRtmrOuBX",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resume": "form",
+        "formTitle": "Time To Choose is the web is good?",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Yes or No",
+              "fieldType": "radio",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "YES"
+                  },
+                  {
+                    "option": "NO"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Enter what is missing in the original prompt"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        976,
+        0
+      ],
+      "id": "f14c7f97-c25c-45cc-aace-0dc6f1ab11a8",
+      "name": "Wait",
+      "webhookId": "4ecb7724-5e1b-4a53-ab46-19e8dbe376e2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "7ffae1eb-5cc2-41ba-834c-faba2dc6314b",
+              "leftValue": "={{ $json[\"Yes or No\"] }}",
+              "rightValue": "YES",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1184,
+        0
+      ],
+      "id": "bced8bc8-8383-4a16-bd4b-7b2e15ca2a6e",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "jsCode": "const binaryFile = $('Code in JavaScript').first().binary.data;\n\n\nreturn {\n  json: $input.first().json, \n  binary: {\n    data: binaryFile \n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1392,
+        -96
+      ],
+      "id": "3418dca4-0d55-472c-8747-903ecb2f2df4",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "owner": {
+          "__rl": true,
+          "value": "yarin-shushan",
+          "mode": "list",
+          "cachedResultName": "yarin-shushan",
+          "cachedResultUrl": "https://github.com/yarin-shushan"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "my-city-sites",
+          "mode": "list",
+          "cachedResultName": "my-city-sites",
+          "cachedResultUrl": "https://github.com/yarin-shushan/my-city-sites"
+        },
+        "filePath": "={{ $node[\"Airtable Trigger\"].json[\"fields\"][\"Location\"] }}-{{ $now.format('yyyy-MM-dd-HH-mm-ss') }}.html",
+        "binaryData": true,
+        "commitMessage": "=New site version for {{ $node[\"Airtable Trigger\"].json[\"fields\"][\"Location\"] }} ({{ $now.format('yyyy-MM-dd HH:mm') }})"
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        1600,
+        -96
+      ],
+      "id": "d4e436aa-eaba-472e-9499-4a510c4124c5",
+      "name": "Create a file",
+      "webhookId": "b5e6f267-8df6-4afe-9bf5-8535c58d7d4a",
+      "credentials": {
+        "githubApi": {
+          "id": "NHMtMFdj0HQ82sIw",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "base": {
+          "__rl": true,
+          "value": "appnqpDQIDEbJJwk3",
+          "mode": "list",
+          "cachedResultName": "AI Travel HTML Generator",
+          "cachedResultUrl": "https://airtable.com/appnqpDQIDEbJJwk3"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl8c5JNxFVrMTmOJ",
+          "mode": "list",
+          "cachedResultName": "Table 1",
+          "cachedResultUrl": "https://airtable.com/appnqpDQIDEbJJwk3/tbl8c5JNxFVrMTmOJ"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "HTML Link": "=https://yarin-shushan.github.io/my-city-sites/{{ $node[\"Create a file\"].json.content.name }}",
+            "id": "={{ $node[\"Airtable Trigger\"].json.id }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Location",
+              "displayName": "Location",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "User Email",
+              "displayName": "User Email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "HTML Link",
+              "displayName": "HTML Link",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        1808,
+        -96
+      ],
+      "id": "9e0f02be-c51c-48b4-ac97-933a4e07fd1c",
+      "name": "Create or update a record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "GlVrlQ4HaFh1IlfD",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Airtable Trigger": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Create a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a file": {
+      "main": [
+        [
+          {
+            "node": "Create or update a record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "141e1b09-3c5f-441e-828b-b020467a941d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3ffe5800c5680153e815d09a8bc3be9841951db7c057db0cad5ad4e11cf1dce5"
+  },
+  "id": "QJm0aGMPkvbRZrmS",
+  "tags": []
+}
